@@ -44,5 +44,13 @@
 	if(move_delay_add > 0)
 		move_delay_add = max(0, move_delay_add - rand(1, 2))
 
+/mob/living/carbon/alien/handle_changeling()
+	return
+
+/mob/living/carbon/alien/handle_fire()//Aliens on fire code
+	if(..())
+		return
+	bodytemperature += BODYTEMP_HEATING_MAX //If you're on fire, you heat up!
+
 /mob/living/carbon/alien/handle_stat_huds()
 	return
