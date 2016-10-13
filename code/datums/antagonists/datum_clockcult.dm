@@ -52,6 +52,9 @@
 	else if(isbrain(owner) || isclockmob(owner))
 		owner << "<span class='nezbere'>You can communicate with other servants by using the Hierophant Network action button in the upper left.</span>"
 	..()
+	if(istype(ticker.mode, /datum/game_mode/clockwork_cult))
+		var/datum/game_mode/clockwork_cult/C = ticker.mode
+		C.present_tasks(owner) //Memorize the objectives
 
 /datum/antagonist/clockcultist/apply_innate_effects()
 	all_clockwork_mobs += owner
@@ -64,7 +67,7 @@
 		if(iscyborg(S))
 			var/mob/living/silicon/robot/R = S
 			R.UnlinkSelf()
-			R.emagged = 1
+			R.SetEmagged(TRUE)
 		else if(isAI(S))
 			var/mob/living/silicon/ai/A = S
 			for(var/C in A.connected_robots)
@@ -102,7 +105,7 @@
 	owner.faction -= "ratvar"
 	owner.languages_spoken &= ~RATVAR
 	owner.languages_understood &= ~RATVAR
-	owner.update_action_buttons_icon() //because a few clockcult things are action buttons and we may be wearing/holding them, we need to update buttons
+	addtimer(owner, "update_action_buttons_icon", 1) //because a few clockcult things are action buttons and we may be wearing/holding them, we need to update buttons
 	owner.clear_alert("clockinfo")
 	owner.clear_alert("nocache")
 	for(var/datum/action/innate/function_call/F in owner.actions) //Removes any bound Ratvarian spears
@@ -111,7 +114,7 @@
 		var/mob/living/silicon/S = owner
 		if(iscyborg(S))
 			var/mob/living/silicon/robot/R = S
-			R.emagged = initial(R.emagged)
+			R.SetEmagged(FALSE)
 		S.make_laws()
 		S.update_icons()
 		S.show_laws()
@@ -125,7 +128,7 @@
 		ticker.mode.servants_of_ratvar -= owner.mind
 		ticker.mode.update_servant_icons_removed(owner.mind)
 	if(owner.mind)
-		owner.mind.memory = "" //Not sure if there's a better way to do this
+		owner.mind.wipe_memory()
 		owner.mind.special_role = null
 	owner.attack_log += "\[[time_stamp()]\] <span class='brass'>Has renounced the cult of Ratvar!</span>"
 	if(iscyborg(owner))
