@@ -463,7 +463,7 @@
 		return
 
 	if(!host.drop_item())
-		host << "<span class='warning'>The [host.get_active_hand()] is stuck to your host's hand, you cannot grow a blade over it!</span>"
+		host << "<span class='warning'>The [host.get_active_held_item()] is stuck to your host's hand, you cannot grow a blade over it!</span>"
 		return
 
 /*
@@ -532,7 +532,7 @@
 	host.status_flags |= GODMODE
 
 	// Make naked for maximum anime
-	var/list/body_layers = list(MUTATIONS_LAYER,BODY_LAYER,DAMAGE_LAYER,UNIFORM_LAYER,ID_LAYER,SHOES_LAYER,GLOVES_LAYER,EARS_LAYER,SUIT_LAYER,GLASSES_LAYER,BELT_LAYER,SUIT_STORE_LAYER,BACK_LAYER,FACEMASK_LAYER,HANDCUFF_LAYER,LEGCUFF_LAYER,L_HAND_LAYER,R_HAND_LAYER)
+	var/list/body_layers = list(MUTATIONS_LAYER,BODY_LAYER,DAMAGE_LAYER,UNIFORM_LAYER,ID_LAYER,SHOES_LAYER,GLOVES_LAYER,EARS_LAYER,SUIT_LAYER,GLASSES_LAYER,BELT_LAYER,SUIT_STORE_LAYER,BACK_LAYER,FACEMASK_LAYER,HANDCUFF_LAYER,LEGCUFF_LAYER,HANDS_LAYER)
 
 
 	playsound(host, 'sound/effects/phasein.ogg', 30, 1)
@@ -572,7 +572,8 @@
 /obj/effect/clothing_transformation
 	icon_state = "blank"
 	icon = 'icons/effects/effects.dmi'
-	burn_state = LAVA_PROOF
+	//todo: shouldnt effects be this already?
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	var/can_destroy = FALSE
 	layer = ABOVE_MOB_LAYER
 	color = "#ff0000"
