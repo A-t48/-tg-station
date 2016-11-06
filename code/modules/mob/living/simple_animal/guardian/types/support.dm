@@ -103,7 +103,7 @@
 /obj/structure/recieving_pad/New(loc, mob/living/simple_animal/hostile/guardian/healer/G)
 	. = ..()
 	if(G.namedatum)
-		color = G.namedatum.colour
+		add_atom_colour(G.namedatum.colour, FIXED_COLOUR_PRIORITY)
 
 /obj/structure/recieving_pad/proc/disappear()
 	visible_message("[src] vanishes!")
@@ -139,7 +139,7 @@
 	A.visible_message("<span class='danger'>[A] starts to glow faintly!\
 		</span>", "<span class='userdanger'>You start to faintly glow, and \
 		you feel strangely weightless!</span>")
-	do_attack_animation(A)
+	do_attack_animation(A, null, 1)
 
 	if(!do_mob(src, A, 60)) //now start the channel
 		src << "<span class='danger'><B>You need to hold still!</span></B>"

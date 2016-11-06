@@ -1,32 +1,3 @@
-//Academy Areas
-
-/area/awaymission/academy
-	name = "Academy Asteroids"
-	icon_state = "away"
-
-/area/awaymission/academy/headmaster
-	name = "Academy Fore Block"
-	icon_state = "away1"
-
-/area/awaymission/academy/classrooms
-	name = "Academy Classroom Block"
-	icon_state = "away2"
-
-/area/awaymission/academy/academyaft
-	name = "Academy Ship Aft Block"
-	icon_state = "away3"
-
-/area/awaymission/academy/academygate
-	name = "Academy Gateway"
-	icon_state = "away4"
-
-/area/awaymission/academy/academycellar
-	name = "Academy Cellar"
-	icon_state = "away4"
-
-/area/awaymission/academy/academyengine
-	name = "Academy Engine"
-	icon_state = "away4"
 
 //Academy Items
 
@@ -242,7 +213,7 @@
 						new /obj/item/weapon/coin/gold(M)
 		if(14)
 			//Free Gun
-			new /obj/item/weapon/gun/projectile/revolver/mateba(get_turf(src))
+			new /obj/item/weapon/gun/ballistic/revolver/mateba(get_turf(src))
 		if(15)
 			//Random One-use spellbook
 			new /obj/item/weapon/spellbook/oneuse/random(get_turf(src))

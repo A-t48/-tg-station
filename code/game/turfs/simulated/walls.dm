@@ -44,8 +44,7 @@
 		if(istype(O,/obj/structure/sign/poster))
 			var/obj/structure/sign/poster/P = O
 			P.roll_and_drop(src)
-		else
-			O.loc = src
+
 	ChangeTurf(/turf/open/floor/plating)
 
 /turf/closed/wall/proc/break_wall()
@@ -75,10 +74,9 @@
 		if(3)
 			if (prob(hardness))
 				dismantle_wall(0,1)
-			else
 	if(!density)
 		..()
-	return
+
 
 /turf/closed/wall/blob_act(obj/structure/blob/B)
 	if(prob(50))
@@ -86,13 +84,18 @@
 
 /turf/closed/wall/mech_melee_attack(obj/mecha/M)
 	M.do_attack_animation(src)
-	if(M.damtype == "brute")
-		playsound(src, 'sound/weapons/punch4.ogg', 50, 1)
-		visible_message("<span class='danger'>[M.name] has hit [src]!</span>")
-		if(prob(hardness + M.force) && M.force > 20)
-			dismantle_wall(1)
-			visible_message("<span class='warning'>[M.name] smashes through the wall!</span>")
-			playsound(src, 'sound/effects/meteorimpact.ogg', 100, 1)
+	switch(M.damtype)
+		if(BRUTE)
+			playsound(src, 'sound/weapons/punch4.ogg', 50, 1)
+			visible_message("<span class='danger'>[M.name] has hit [src]!</span>", null, null, COMBAT_MESSAGE_RANGE)
+			if(prob(hardness + M.force) && M.force > 20)
+				dismantle_wall(1)
+				playsound(src, 'sound/effects/meteorimpact.ogg', 100, 1)
+		if(BURN)
+			playsound(src, 'sound/items/Welder.ogg', 100, 1)
+		if(TOX)
+			playsound(src, 'sound/effects/spray2.ogg', 100, 1)
+			return 0
 
 /turf/closed/wall/attack_paw(mob/living/user)
 	user.changeNext_move(CLICK_CD_MELEE)
@@ -104,7 +107,6 @@
 	M.do_attack_animation(src)
 	if(M.environment_smash >= 2)
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, 1)
-		M << "<span class='notice'>You smash through the wall.</span>"
 		dismantle_wall(1)
 		return
 
@@ -112,7 +114,6 @@
 	..(user, 1)
 	if(prob(hardness))
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, 1)
-		user << text("<span class='notice'>You smash through the wall.</span>")
 		user.say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!" ))
 		dismantle_wall(1)
 	else
@@ -176,7 +177,7 @@
 		var/obj/item/weapon/weldingtool/WT = W
 		if( WT.remove_fuel(0,user) )
 			user << "<span class='notice'>You begin slicing through the outer plating...</span>"
-			playsound(src, 'sound/items/Welder.ogg', 100, 1)
+			playsound(src, W.usesound, 100, 1)
 			if(do_after(user, slicing_duration/W.toolspeed, target = src))
 				if(!iswallturf(src) || !user || !WT || !WT.isOn() || !T)
 					return 1
@@ -255,17 +256,17 @@
 		ChangeTurf(/turf/closed/wall/mineral/cult)
 
 /turf/closed/wall/ratvar_act(force)
-	var/converted = (prob(40) || force)
-	if(converted)
+	. = ..()
+	if(.)
 		ChangeTurf(/turf/closed/wall/clockwork)
-	for(var/I in src)
-		var/atom/A = I
-		if(ismob(A) || converted)
-			A.ratvar_act()
 
 /turf/closed/wall/storage_contents_dump_act(obj/item/weapon/storage/src_object, mob/user)
 	return 0
 
+/turf/closed/wall/acid_act(acidpwr, acid_volume)
+	if(explosion_block >= 2)
+		acidpwr = min(acidpwr, 50) //we reduce the power so strong walls never get melted.
+	. = ..()
+
 /turf/closed/wall/acid_melt()
 	dismantle_wall(1)
-

@@ -19,14 +19,14 @@
 	flags_inv = HIDEHAIR|HIDEEARS
 
 /obj/item/clothing/suit/cloak/suicide_act(mob/user)
-	user.visible_message("<span class='suicide'>[user] is strangling themself with [src]! It looks like they're trying to commit suicide.</span>")
+	user.visible_message("<span class='suicide'>[user] is strangling [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	return(OXYLOSS)
 
 /obj/item/clothing/suit/cloak/hos
 	name = "head of security's cloak"
 	desc = "Worn by Securistan, ruling the station with an iron fist. It's slightly armored."
 	icon_state = "hoscloak"
-	allowed = list(/obj/item/weapon/gun/energy/gun/hos)
+	allowed = list(/obj/item/weapon/gun/energy/e_gun/hos)
 	armor = list(melee = 30, bullet = 30, laser = 10, energy = 10, bomb = 25, bio = 0, rad = 0, fire = 0, acid = 60)
 
 /obj/item/clothing/suit/cloak/qm

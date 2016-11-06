@@ -1,9 +1,3 @@
-#define GIRDER_NORMAL 0
-#define GIRDER_REINF_STRUTS 1
-#define GIRDER_REINF 2
-#define GIRDER_DISPLACED 3
-#define GIRDER_DISASSEMBLED 4
-
 /obj/structure/girder
 	name = "girder"
 	icon_state = "girder"
@@ -20,7 +14,7 @@
 	add_fingerprint(user)
 	if(istype(W, /obj/item/weapon/screwdriver))
 		if(state == GIRDER_DISPLACED)
-			playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
+			playsound(src.loc, W.usesound, 100, 1)
 			user.visible_message("<span class='warning'>[user] disassembles the girder.</span>", \
 								"<span class='notice'>You start to disassemble the girder...</span>", "You hear clanking and banging noises.")
 			if(do_after(user, 40/W.toolspeed, target = src))
@@ -32,7 +26,7 @@
 				M.add_fingerprint(user)
 				qdel(src)
 		else if(state == GIRDER_REINF)
-			playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
+			playsound(src.loc, W.usesound, 100, 1)
 			user << "<span class='notice'>You start unsecuring support struts...</span>"
 			if(do_after(user, 40/W.toolspeed, target = src))
 				if(state != GIRDER_REINF)
@@ -45,7 +39,7 @@
 			if(!isfloorturf(loc))
 				user << "<span class='warning'>A floor must be present to secure the girder!</span>"
 				return
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
+			playsound(src.loc, W.usesound, 100, 1)
 			user << "<span class='notice'>You start securing the girder...</span>"
 			if(do_after(user, 40/W.toolspeed, target = src))
 				user << "<span class='notice'>You secure the girder.</span>"
@@ -53,7 +47,7 @@
 				transfer_fingerprints_to(G)
 				qdel(src)
 		else if(state == GIRDER_NORMAL && can_displace)
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
+			playsound(src.loc, W.usesound, 100, 1)
 			user << "<span class='notice'>You start unsecuring the girder...</span>"
 			if(do_after(user, 40/W.toolspeed, target = src))
 				user << "<span class='notice'>You unsecure the girder.</span>"
@@ -78,7 +72,7 @@
 		qdel(src)
 
 	else if(istype(W, /obj/item/weapon/wirecutters) && state == GIRDER_REINF_STRUTS)
-		playsound(src.loc, 'sound/items/Wirecutter.ogg', 100, 1)
+		playsound(src.loc, W.usesound, 100, 1)
 		user << "<span class='notice'>You start removing support struts...</span>"
 		if(do_after(user, 40/W.toolspeed, target = src))
 			user << "<span class='notice'>You remove the support struts.</span>"
@@ -272,6 +266,13 @@
 		new remains(loc)
 	qdel(src)
 
+/obj/structure/girder/ratvar_act()
+	if(anchored)
+		new /obj/structure/destructible/clockwork/wall_gear(loc)
+	else
+		new /obj/structure/destructible/clockwork/wall_gear/displaced(loc)
+	qdel(src)
+
 /obj/structure/girder/narsie_act()
 	if(prob(25))
 		new /obj/structure/girder/cult(loc)
@@ -316,7 +317,7 @@
 	else if(istype(W, /obj/item/weapon/weldingtool))
 		var/obj/item/weapon/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
-			playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)
+			playsound(src.loc, W.usesound, 50, 1)
 			user << "<span class='notice'>You start slicing apart the girder...</span>"
 			if(do_after(user, 40/W.toolspeed, target = src))
 				if( !WT.isOn() )

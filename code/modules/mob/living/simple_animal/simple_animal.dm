@@ -255,12 +255,9 @@
 	if(icon_gib)
 		new /obj/effect/overlay/temp/gib_animation/animal(loc, icon_gib)
 
-/mob/living/simple_animal/say_quote(input)
-	var/ending = copytext(input, length(input))
-	if(speak_emote && speak_emote.len && ending != "?" && ending != "!")
-		var/emote = pick(speak_emote)
-		if(emote)
-			return "[emote], \"[input]\""
+/mob/living/simple_animal/say_quote(input, list/spans)
+	if(speak_emote && speak_emote.len)
+		verb_say = pick(speak_emote)
 	return ..()
 
 /mob/living/simple_animal/emote(act, m_type=1, message = null)
@@ -347,10 +344,6 @@
 		density = initial(density)
 		lying = 0
 		. = 1
-
-/mob/living/simple_animal/fully_heal(admin_revive = 0)
-	health = maxHealth
-	..()
 
 /mob/living/simple_animal/proc/make_babies() // <3 <3 <3
 	if(gender != FEMALE || stat || next_scan_time > world.time || !childtype || !animal_species || ticker.current_state != GAME_STATE_PLAYING)
@@ -518,10 +511,12 @@
 		var/obj/item/r_hand = get_item_for_held_index(2)
 		if(r_hand)
 			r_hand.layer = ABOVE_HUD_LAYER
+			r_hand.plane = ABOVE_HUD_PLANE
 			r_hand.screen_loc = ui_hand_position(get_held_index_of_item(r_hand))
 			client.screen |= r_hand
 		if(l_hand)
 			l_hand.layer = ABOVE_HUD_LAYER
+			l_hand.plane = ABOVE_HUD_PLANE
 			l_hand.screen_loc = ui_hand_position(get_held_index_of_item(l_hand))
 			client.screen |= l_hand
 

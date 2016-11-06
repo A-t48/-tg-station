@@ -11,6 +11,7 @@
 	armor = list(melee = 25, bullet = 10, laser = 10, energy = 100, bomb = 0, bio = 100, rad = 100, fire = 90, acid = 30)
 	obj_integrity = 200
 	max_integrity = 200
+	resistance_flags = FIRE_PROOF
 	var/datum/gas_mixture/air_contents	// internal reservoir
 	var/mode = 1	// mode -1=screws removed 0=off 1=charging 2=charged
 	var/flush = 0	// true if flush handle is pulled
@@ -116,7 +117,6 @@
 
 /obj/machinery/disposal/MouseDrop_T(mob/living/target, mob/living/user)
 	if(istype(target))
-		. = TRUE
 		stuff_mob_in(target, user)
 
 /obj/machinery/disposal/proc/stuff_mob_in(mob/living/target, mob/living/user)
@@ -154,8 +154,8 @@
 	attempt_escape(user)
 
 // resist to escape the bin
-/obj/machinery/disposal/container_resist()
-	attempt_escape(usr)
+/obj/machinery/disposal/container_resist(mob/living/user)
+	attempt_escape(user)
 
 /obj/machinery/disposal/proc/attempt_escape(mob/user)
 	if(src.flushing)
@@ -257,7 +257,7 @@
 		H.vent_gas(loc)
 		qdel(H)
 
-/obj/machinery/disposal/deconstruct()
+/obj/machinery/disposal/deconstruct(disassembled = TRUE)
 	if(!(flags & NODECONSTRUCT))
 		if(stored)
 			var/turf/T = loc

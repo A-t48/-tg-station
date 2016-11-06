@@ -158,7 +158,7 @@
 						return
 					newname = "redtag ED-209 assembly"
 				if("")
-					if(!istype(W, /obj/item/weapon/gun/energy/gun/advtaser))
+					if(!istype(W, /obj/item/weapon/gun/energy/e_gun/advtaser))
 						return
 					newname = "taser ED-209 assembly"
 				else
@@ -174,7 +174,7 @@
 
 		if(8)
 			if(istype(W, /obj/item/weapon/screwdriver))
-				playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
+				playsound(loc, W.usesound, 100, 1)
 				var/turf/T = get_turf(user)
 				user << "<span class='notice'>You start attaching the gun to the frame...</span>"
 				sleep(40)

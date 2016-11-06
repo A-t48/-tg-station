@@ -179,7 +179,7 @@
 	qdel(src)
 
 /obj/machinery/door/window/narsie_act()
-	color = "#7D1919"
+	add_atom_colour("#7D1919", FIXED_COLOUR_PRIORITY)
 
 /obj/machinery/door/window/ratvar_act()
 	new/obj/machinery/door/window/clockwork(src.loc, dir)
@@ -215,14 +215,14 @@
 			if(density || operating)
 				user << "<span class='warning'>You need to open the door to access the maintenance panel!</span>"
 				return
-			playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
+			playsound(src.loc, I.usesound, 50, 1)
 			panel_open = !panel_open
 			user << "<span class='notice'>You [panel_open ? "open":"close"] the maintenance panel of the [src.name].</span>"
 			return
 
 		if(istype(I, /obj/item/weapon/crowbar))
 			if(panel_open && !density && !operating)
-				playsound(src.loc, 'sound/items/Crowbar.ogg', 100, 1)
+				playsound(src.loc, I.usesound, 100, 1)
 				user.visible_message("[user] removes the electronics from the [src.name].", \
 									 "<span class='notice'>You start to remove electronics from the [src.name]...</span>")
 				if(do_after(user,40/I.toolspeed, target = src))
@@ -300,17 +300,19 @@
 	explosion_block = 1
 
 /obj/machinery/door/window/clockwork
-	name = "clockwork door"
+	name = "brass windoor"
 	desc = "A thin door with translucent brass paneling."
 	icon_state = "clockwork"
 	base_state = "clockwork"
 	shards = 0
 	rods = 0
+	resistance_flags = FIRE_PROOF | ACID_PROOF
 	var/made_glow = FALSE
 
 /obj/machinery/door/window/clockwork/New(loc, set_dir)
 	..()
-	debris += new/obj/item/stack/sheet/brass(src, 2)
+	for(var/i in 1 to 2)
+		debris += new/obj/item/clockwork/alloy_shards/medium/gear_bit/large(src)
 	change_construction_value(2)
 
 /obj/machinery/door/window/clockwork/setDir(direct)
@@ -336,6 +338,7 @@
 		var/previouscolor = color
 		color = "#960000"
 		animate(src, color = previouscolor, time = 8)
+		addtimer(src, "update_atom_colour", 8)
 
 /obj/machinery/door/window/clockwork/allowed(mob/M)
 	if(is_servant_of_ratvar(M))

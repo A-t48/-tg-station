@@ -6,11 +6,13 @@
 	resistance_flags = FLAMMABLE
 	obj_integrity = 70
 	max_integrity = 70
+	integrity_failure = 0
 	can_weld_shut = 0
 	cutting_tool = /obj/item/weapon/wirecutters
 	open_sound = 'sound/effects/rustle2.ogg'
 	cutting_sound = 'sound/items/poster_ripped.ogg'
 	material_drop = /obj/item/stack/sheet/cardboard
+	delivery_icon = "deliverybox"
 	var/move_speed_multiplier = 1
 	var/move_delay = 0
 	var/egged = 0

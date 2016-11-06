@@ -114,8 +114,7 @@
 	ready = TRUE
 	update_icon()
 
-/obj/machinery/implantchair/container_resist()
-	var/mob/living/user = usr
+/obj/machinery/implantchair/container_resist(mob/living/user)
 	if(state_open)
 		return
 	user.changeNext_move(CLICK_CD_BREAKOUT)
@@ -131,13 +130,12 @@
 		open_machine()
 
 /obj/machinery/implantchair/relaymove(mob/user)
-	container_resist()
+	container_resist(user)
 
 /obj/machinery/implantchair/MouseDrop_T(mob/target, mob/user)
 	if(user.stat || user.lying || !Adjacent(user) || !user.Adjacent(target) || !iscarbon(target) || !user.IsAdvancedToolUser())
 		return
 	close_machine(target)
-	. = TRUE
 
 /obj/machinery/implantchair/close_machine(mob/user)
 	if((isnull(user) || istype(user)) && state_open)
